@@ -390,7 +390,18 @@ Resources:
 
 When having enable `cloudformation_run_diff`, you will be able to see line by line diff output from you local (jinja2 rendered) template against the one which is currently deployed on AWS. To give you an impression about how this looks, see the following example output:
 
-TODO: Show diff here
+```diff
+--- before
++++ after
+@@ -38,7 +38,6 @@
+             "Type": "AWS::S3::BucketPolicy"
+         },
+         "s3Bucket": {
+-            "DeletionPolicy": "Retain",
+             "Properties": {
+                 "BucketName": {
+                     "Ref": "bucketName"
+```
 
 
 ## Dependencies
