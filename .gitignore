@@ -14,6 +14,7 @@
 ######################################
 
 # Add repo specific stuff here...
+ansible.cfg
 build/
 
 

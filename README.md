@@ -43,8 +43,9 @@ The following variables are available in `defaults/main.yml` and can be used to 
 |----------|------|---------|-------------|
 | `cloudformation_clean_build_env` | bool | `False` | Clean build directory of Jinja2 rendered Cloudformation templates on each run. |
 | `cloudformation_generate_only` | bool | `False` | Specify this variable via ansible command line arguments to only render the Cloudformation files from Jinja2 templates and do not deploy them on AWS. |
+| `cloudformation_required` | list | `[]` | Array of available cloudformation stack keys that you want to enforce to be required instead of being optional. Each cloudformation stack item will be checked against the customly set required keys. In case a stack item does not contain any of those keys, an error will be thrown before any deployment has happened. |
 | `cloudformation_defaults` | dict | `{}` | Dictionary of default values to apply to every cloudformation stack. Note that those values can still be overwritten on a per stack definition. |
-| `cloudformation_stacks` | dict | `[]` | Array of cloudformation stacks to deploy. |
+| `cloudformation_stacks` | list | `[]` | Array of cloudformation stacks to deploy. |
 
 ### Details
 
@@ -80,8 +81,11 @@ This section contains a more detailed describtion about available dict or array 
 
 Define default values to be applied to all stacks (if not overwritten on a per stack definition)
 ```yml
+# Enforce that 'profile' must be set for each cloudformation stack item
+cloudformation_required:
+  - profile
+
 cloudformation_defaults:
-  profile: testing
   region: eu-central-1
 ```
 
