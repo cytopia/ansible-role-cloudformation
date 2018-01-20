@@ -17,11 +17,13 @@ Ansible role to render an arbitrary number of Jinja2 templates into cloudformati
 
 ## Motivation
 
-This role overcomes the shortcomings of Cloudformation templates itself. The Cloudformation syntax is very limited when it comes to programming logic such as conditions, loops and complex variables such as arrays or dictionaries. By wrapping your Cloudformation template into Ansible, you will be able to use Jinja2 directives within the Cloudformation template itself, thus having all of the beauty of Ansible and still deploy via Cloudformation stacks.
+This role overcomes the shortcomings of Cloudformation templates itself as well as making heavy use of Ansible's features.
 
-Another advantage of using Ansible to deploy your Cloudformation templates is that Ansible supports a `--check` mode for Cloudformation deployments (since Ansible 2.4). During that mode it will create Change-sets and let you know **what would change** if you actually roll it out.
+1. **Cloudformation limitations** - The Cloudformation syntax is very limited when it comes to programming logic such as conditions, loops and complex variables such as arrays or dictionaries. By wrapping your Cloudformation template into Ansible, you will be able to use Jinja2 directives within the Cloudformation template itself, thus having all of the beauty of Ansible and still deploy via Cloudformation stacks.
+2. **Environment agnostic** - By being able to render Cloudformation templates with custom loop variables you can finally create fully environment agnostic templates and re-use them for production, testing, staging and other environments.
+3. **Dry run** - Another advantage of using Ansible to deploy your Cloudformation templates is that Ansible supports a dry-run mode (`--check`) for Cloudformation deployments (since Ansible 2.4). During that mode it will create Change-sets and let you know **what would change** if you actually roll it out. This way you can safely test your stacks before actually applying them.
 
-This role can be used to either only generate your templates via `cloudformation_generate_only` or also additionally deploy your rendered templates.
+This role can be used to either only generate your templates via `cloudformation_generate_only` or also additionally deploy your rendered templates. So when you have your deployment infrastructure already in place, you can still make use of this role, by only rendering the templates and afterwards hand them over to your existing infrastructure.
 
 When templates are rendered, a temporary `build/` directory is created inside the role directory. This can either persist or be re-created every time this role is run. Specify the behaviour with `cloudformation_clean_build_env`.
 
@@ -227,7 +229,68 @@ cloudformation_stacks:
 ## Templates
 
 This section gives a brief overview about what can be done with Cloudformation templates using Jinja2 directives.
+
+### Example: Subnet definitions
+
+The following template can be rolled out to different staging environment and is able to include a different number of subnets.
+
+Ansible variables
+```yml
+---
+# file: staging.yml
+vpc_subnets:
+  - directive: subnetA
+    az: a
+    cidr: 10.0.10.0/24
+    tags:
+      - name: Name
+        value: staging-subnet-a
+      - name: env
+        value: staging
+  - directive: subnetB
+    az: b
+    cidr: 10.0.20.0/24
+    tags:
+      - name: Name
+        value: staging-subnet-b
+      - name: env
+        value: staging
+```
+
+```yml
+---
+# file: production.yml
+vpc_subnets:
+  - directive: subnetA
+    az: a
+    cidr: 10.0.10.0/24
+    tags:
+      - name: Name
+        value: prod-subnet-a
+      - name: env
+        value: production
+  - directive: subnetB
+    az: b
+    cidr: 10.0.20.0/24
+    tags:
+      - name: Name
+        value: prod-subnet-b
+      - name: env
+        value: production
+  - directive: subnetC
+    az: b
+    cidr: 10.0.30.0/24
+    tags:
+      - name: Name
+        value: prod-subnet-c
+      - name: env
+        value: production
+```
+
+Cloudformation template
 ```jinja
+AWSTemplateFormatVersion: '2010-09-09'
+Description: VPC Template
 Resources:
   vpc:
     Type: AWS::EC2::VPC
@@ -254,6 +317,64 @@ Resources:
 {% for tag in subnet.tags %}
         - Key: {{ tag.name }}
           Value: {{ tag.value }}
+{% endfor %}
+{% endif %}
+```
+
+
+### Example: Security groups
+
+Defining security groups with IP-specific rules is very difficult when you want to keep environment agnosticity and still use the same Cloudformation template for all environments. This however can easily be overcome by providing environment specific array definitions via Jinja2.
+
+Ansible variables
+```yml
+---
+# file: staging.yml
+# Staging is wiede open, so that developers are able to
+# connect from attached VPN's
+security_groups:
+  - protocol:  tcp
+    from_port: 3306
+    to_port:   3306
+    cidr_ip:   10.0.0.1/32
+  - protocol:  tcp
+    from_port: 3306
+    to_port:   3306
+    cidr_ip:   192.168.0.15/32
+  - protocol:  tcp
+    from_port: 3306
+    to_port:   3306
+    cidr_ip:   172.16.0.0/16
+```
+
+```yml
+---
+# file: production.yml
+# The production environment has far less rules as well as other
+# ip ranges.
+security_groups:
+  - protocol:  tcp
+    from_port: 3306
+    to_port:   3306
+    cidr_ip:   10.0.15.1/32
+```
+
+Cloudformation template
+```jinja
+AWSTemplateFormatVersion: '2010-09-09'
+Description: VPC Template
+Resources:
+  rdsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: RDS security group
+{% if security_groups %}
+      SecurityGroupIngress:
+{% for rule in security_groups %}
+        - IpProtocol: "{{ rule.protocol }}"
+          FromPort: "{{ rule.from_port }}"
+          ToPort: "{{ rule.to_port }}"
+          CidrIp: "{{ rule.cidr_ip }}"
 {% endfor %}
 {% endif %}
 ```
