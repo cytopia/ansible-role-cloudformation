@@ -224,7 +224,7 @@ cloudformation_stacks:
 ```
 
 
-## Usage
+## Templates
 
 This section gives a brief overview about what can be done with Cloudformation templates using Jinja2 directives.
 ```jinja
