@@ -5,7 +5,7 @@
 ###
 - name: register a sane template name
   set_fact:
-    cloudformation_file_name: "{{ cloudformation.template | basename }}-{{ cloudformation.name }}.yml"
+    cloudformation_file_name: "{{ cloudformation.template | basename }}-{{ cloudformation.stack_name }}.yml"
   check_mode: False
 
 
