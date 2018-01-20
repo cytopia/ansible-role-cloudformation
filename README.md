@@ -4,11 +4,13 @@
 **[Installation](#installation)** |
 **[Variables](#variables)** |
 **[Usage](#usage)** |
+**[Templates](#templates)** |
 **[Dependencies](#dependencies)** |
 **[Requirements](#requirements)** |
 **[License](#license)**
 
 [![Build Status](https://travis-ci.org/cytopia/ansible-cloudformation.svg?branch=master)](https://travis-ci.org/cytopia/ansible-cloudformation)
+[![Ansible Galaxy](https://img.shields.io/ansible/role/d/23347.svg)](https://galaxy.ansible.com/cytopia/cloudformation/)
 
 Ansible role to render an arbitrary number of Jinja2 templates into cloudformation files and create any number of stacks.
 
@@ -219,6 +221,41 @@ cloudformation_stacks:
       s3Key: lambda.py.zip
     tags:
       env: "{{ stack_prefix }}"
+```
+
+
+## Usage
+
+This section gives a brief overview about what can be done with Cloudformation templates using Jinja2 directives.
+```jinja
+Resources:
+  vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: {{ vpc_cidr_block }}
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+{% if vpc_tags %}
+      Tags:
+{% for tag in vpc_tags %}
+        - Key: {{ tag.name }}
+          Value: {{ tag.value }}
+{% endfor %}
+{% endif %}
+{% for subnet in vpc_subnets %}
+  {{ subnet.directive }}:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: {{ subnet.az }}
+      CidrBlock: {{ subnet.cidr }}
+      VpcId: !Ref vpc
+{% if subnet.tags %}
+      Tags:
+{% for tag in subnet.tags %}
+        - Key: {{ tag.name }}
+          Value: {{ tag.value }}
+{% endfor %}
+{% endif %}
 ```
 
 
