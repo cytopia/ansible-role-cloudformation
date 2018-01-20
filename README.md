@@ -413,6 +413,8 @@ None
 
 Use at least **Ansible 2.4** in order to also have `--check` mode for cloudformation.
 
+When using diff mode, python `cfn_flip` is required. (`pip install cfn_flip`)
+
 
 ## License
 
