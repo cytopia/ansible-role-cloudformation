@@ -27,6 +27,25 @@ cloudformation_defaults: {}
 #  region:
 
 
+# Array of available cloudformation stack keys that you want
+# to enforce to be required instead of optional.
+# Each cloudformation stack item will be checked against the customly
+# set required keys. In case a stack item does not contain any of those
+# keys, an error will be thrown before any deployment has happened.
+# What would this be good for?
+# Imagine your company wants to enforce the usage of boto profiles for
+# all AWS related modules, then you would set this as required in
+# groups_vars/all.yml to prevent anyone from forgetting to set it.
+# see tasks/assert.yml for implementation
+cloudformation_required: []
+#  - aws_access_key
+#  - aws_secret_key
+#  - security_token:
+#  - profile
+#  - notification_arns
+#  - region
+
+
 # Array of cloudformation stacks to deploy
 # Module arguments passed here take precendence over any
 # defaults set above.

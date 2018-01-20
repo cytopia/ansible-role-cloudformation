@@ -4,6 +4,8 @@
   connection: local
   remote_user: root
   vars:
+    cloudformation_required:
+      - profile
     cloudformation_defaults:
       region: eu-central-1
     cloudformation_stacks:

@@ -7,3 +7,11 @@
       - item.template is defined
   with_items:
     - "{{ cloudformation_stacks }}"
+
+- name: assert custom set required keys in cloudformation array
+  assert:
+    that:
+      - item[0].item[1] is defined
+  with_nested:
+    - "{{ cloudformation_stacks }}"
+    - "{{ cloudformation_required }}"
