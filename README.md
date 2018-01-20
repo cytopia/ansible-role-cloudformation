@@ -11,6 +11,7 @@
 
 [![Build Status](https://travis-ci.org/cytopia/ansible-cloudformation.svg?branch=master)](https://travis-ci.org/cytopia/ansible-cloudformation)
 [![Ansible Galaxy](https://img.shields.io/ansible/role/d/23347.svg)](https://galaxy.ansible.com/cytopia/cloudformation/)
+[![Release](https://img.shields.io/github/release/cytopia/ansible-cloudformation.svg)](https://github.com/cytopia/ansible-cloudformation/releases)
 
 Ansible role to render an arbitrary number of Jinja2 templates into cloudformation files and create any number of stacks.
 
