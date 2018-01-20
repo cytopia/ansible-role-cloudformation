@@ -4,6 +4,7 @@
 **[Installation](#installation)** |
 **[Variables](#variables)** |
 **[Usage](#usage)** |
+**[Templates](#templates)** |
 **[Dependencies](#dependencies)** |
 **[Requirements](#requirements)** |
 **[License](#license)**
@@ -220,6 +221,41 @@ cloudformation_stacks:
       s3Key: lambda.py.zip
     tags:
       env: "{{ stack_prefix }}"
+```
+
+
+## Usage
+
+This section gives a brief overview about what can be done with Cloudformation templates using Jinja2 directives.
+```jinja
+Resources:
+  vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: {{ vpc_cidr_block }}
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+{% if vpc_tags %}
+      Tags:
+{% for tag in vpc_tags %}
+        - Key: {{ tag.name }}
+          Value: {{ tag.value }}
+{% endfor %}
+{% endif %}
+{% for subnet in vpc_subnets %}
+  {{ subnet.directive }}:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: {{ subnet.az }}
+      CidrBlock: {{ subnet.cidr }}
+      VpcId: !Ref vpc
+{% if subnet.tags %}
+      Tags:
+{% for tag in subnet.tags %}
+        - Key: {{ tag.name }}
+          Value: {{ tag.value }}
+{% endfor %}
+{% endif %}
 ```
 
 
