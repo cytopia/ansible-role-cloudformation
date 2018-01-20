@@ -12,6 +12,20 @@ cloudformation_clean_build_env: False
 cloudformation_generate_only: False
 
 
+# This role ships a custom Ansible Cloudformation module:
+# cloudformation_diff.py - https://github.com/cytopia/ansible-modules
+# This module generates a text-based diff output between your local
+# cloudformation template ready to be deployed and the currently deployed
+# templated on AWS Cloudformation.
+# Why would I want this?
+# The current cloudformation module only list change sets in --check mode,
+# which will let you know what *kind* will change (e.g. security groups),
+# but not what exactly will change (which security groups and the values of them)
+# In order to also be able to view the exact changes that will take place,
+# enable the cloudformation_diff module here.
+cloudformation_run_diff: False
+
+
 # Dictionary of cloudformation defaults which will be applied
 # to all stacks. Values supplied explicitly to a stack take
 # precendence. All of the default values are optional and
