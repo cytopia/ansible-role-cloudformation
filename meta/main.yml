@@ -21,13 +21,6 @@ galaxy_info:
         - quantal
         - raring
         - saucy
-  categories:
-    - AWS
-    - aws
-    - amazon
-    - cloudformation
-    - cloud
-    - cfn
   galaxy_tags:
     - AWS
     - aws
