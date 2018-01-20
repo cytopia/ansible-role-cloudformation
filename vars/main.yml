@@ -1,0 +1,7 @@
+---
+
+# Default path for build directory
+cloudformation_build_dir_path: "{{ role_path }}/build"
+
+# Default chmod mode of the build directory
+cloudformation_build_dir_mode: 0700

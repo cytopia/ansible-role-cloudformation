@@ -1,0 +1,9 @@
+---
+
+- name: assert that cloudformation array has required elements
+  assert:
+    that:
+      - item.stack_name is defined
+      - item.template is defined
+  with_items:
+    - "{{ cloudformation_stacks }}"

@@ -1,0 +1,41 @@
+---
+
+###
+### Set a sane name for the rendered file
+###
+- name: register a sane template name
+  set_fact:
+    cloudformation_file_name: "{{ cloudformation.template | basename }}-{{ cloudformation.name }}.yml"
+  check_mode: False
+
+
+###
+### Render cloudformation jinja2 template into the build directory
+###
+- name: ensure cloudformation template is rendered
+  template:
+    src: "{{ cloudformation.template }}"
+    dest: "{{ cloudformation_build_dir_path }}/{{ cloudformation_file_name }}"
+    mode: 0644
+    force: True
+  changed_when: False
+  check_mode: False
+
+
+###
+### Run rendered cloudformation template
+###
+- name: ensure cloudformation stack is present
+  cloudformation:
+    stack_name: "{{ cloudformation.stack_name }}"
+    state: present
+    template: "{{ cloudformation_build_dir_path }}/{{ cloudformation_file_name }}"
+    aws_access_key: "{{ cloudformation.aws_access_key | cloudformation_defauls.aws_access_key | default(omit) }}"
+    aws_secret_key: "{{ cloudformation.aws_secret_key | cloudformation_defauls.aws_secret_key | default(omit) }}"
+    security_token: "{{ cloudformation.security_token | cloudformation_defauls.security_token | default(omit) }}"
+    profile: "{{ cloudformation.profile | cloudformation_defaults.profile | default(omit) }}"
+    region: "{{ cloudformation.region | cloudformation_defaults.region | default(omit) }}"
+    notification_arns: "{{ cloudformation.notification_arns | cloudformation_defaults.notification_arns | default(omit) }}"
+    template_parameters: "{{ cloudformation.template_parameters | default(omit) }}"
+    tags: "{{ cloudformation.tags | default(omit) }}"
+  when: not cloudformation_generate_only

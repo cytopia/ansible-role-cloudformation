@@ -1,0 +1,36 @@
+---
+
+###
+### assert default variables
+###
+- include_tasks: asserts.yml
+
+
+###
+### Prepare jinja2 template render environment
+###
+- name: ensure previous build directory is removed
+  file:
+    state: absent
+    path: "{{ cloudformation_build_dir_path }}"
+  changed_when: False
+  check_mode: False
+  when: cloudformation_clean_build_env
+
+- name: ensure build directory is present
+  file:
+    state: directory
+    path: "{{ cloudformation_build_dir_path }}"
+    mode: "{{ cloudformation_build_dir_mode }}"
+  changed_when: False
+  check_mode: False
+
+
+###
+### Call in a loop for easier usage
+###
+- include_tasks: run.yml
+  vars:
+    cloudformation: "{{ item }}"
+  with_items:
+    - "{{ cloudformation_stacks }}"

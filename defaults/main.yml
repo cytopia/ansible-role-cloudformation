@@ -1,0 +1,49 @@
+---
+
+# Remove build directory with created
+# Cloudformation templates on each run?
+cloudformation_clean_build_env: False
+
+
+# Overwrite this variable via command line to only generate
+# Cloudformation files from Jinja2 templates.
+# This is supposed to only be used for debugging purposes
+# $ ansible-playbook play.yml -e cloudformation_generate_only=yes
+cloudformation_generate_only: False
+
+
+# Array of cloudformation defaults which will be applied
+# to all stacks. Values supplied explicitly to a stack take
+# precendence. All of the default values are optional and
+# if none are specified here nor in the cloudformation stacks
+# they will be omitted.
+cloudformation_defaults: {}
+# ---- optional ----
+#  aws_access_key:
+#  aws_secret_key:
+#  security_token:
+#  profile:
+#  notification_arns:
+#  region:
+
+
+# Array of cloudformation stacks to deploy
+# Module arguments passed here take precendence over any
+# defaults set above.
+cloudformation_stacks: []
+# ---- required ----
+#  - stack_name:
+#    template: path/to/file
+# ---- optional ----
+#    aws_access_key:
+#    aws_secret_key:
+#    security_token:
+#    profile:
+#    notification_arns:
+#    region:
+#    template_parameters:
+#      param1: val1
+#      param2: val2
+#    tags:
+#      tag1: val1
+#      tag2: val2
