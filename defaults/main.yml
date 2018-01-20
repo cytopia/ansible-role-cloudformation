@@ -12,7 +12,7 @@ cloudformation_clean_build_env: False
 cloudformation_generate_only: False
 
 
-# Array of cloudformation defaults which will be applied
+# Dictionary of cloudformation defaults which will be applied
 # to all stacks. Values supplied explicitly to a stack take
 # precendence. All of the default values are optional and
 # if none are specified here nor in the cloudformation stacks

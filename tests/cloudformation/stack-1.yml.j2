@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: S3 template
+
+
+###
+### Paramets
+###
+Parameters:
+  bucketName:
+    Type: String
+
+
+###
+### Resources
+###
+Resources:
+
+  # S3 Bucket
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      BucketName: !Ref bucketName
+
+  # S3 Bucket policy
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref s3Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Resource: !GetAtt s3Bucket.Arn
+            Principal:
+              Service: !Sub logs.${AWS::Region}.amazonaws.com
+            Action:
+              - s3:*
