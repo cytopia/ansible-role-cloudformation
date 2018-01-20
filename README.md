@@ -5,6 +5,7 @@
 **[Variables](#variables)** |
 **[Usage](#usage)** |
 **[Templates](#templates)** |
+**[Diff](#diff)** |
 **[Dependencies](#dependencies)** |
 **[Requirements](#requirements)** |
 **[License](#license)**
@@ -44,6 +45,7 @@ The following variables are available in `defaults/main.yml` and can be used to 
 |----------|------|---------|-------------|
 | `cloudformation_clean_build_env` | bool | `False` | Clean build directory of Jinja2 rendered Cloudformation templates on each run. |
 | `cloudformation_generate_only` | bool | `False` | Specify this variable via ansible command line arguments to only render the Cloudformation files from Jinja2 templates and do not deploy them on AWS. |
+| `cloudformation_run_diff` | bool | `False` | This role ships a custom Ansible Cloudformation module **[cloudformation_diff](https://github.com/cytopia/ansible-modules)**. This module generates a text-based diff output between your local cloudformation template ready to be deployed and the currently deployed templated on AWS Cloudformation.<br/>Why would I want this?<br/>The current cloudformation module only list change sets in --check mode, which will let you know what *kind* will change (e.g. security groups), but not what exactly will change (which security groups and the values of them) In order to also be able to view the exact changes that will take place, enable the cloudformation_diff module here. |
 | `cloudformation_required` | list | `[]` | Array of available cloudformation stack keys that you want to enforce to be required instead of being optional. Each cloudformation stack item will be checked against the customly set required keys. In case a stack item does not contain any of those keys, an error will be thrown before any deployment has happened. |
 | `cloudformation_defaults` | dict | `{}` | Dictionary of default values to apply to every cloudformation stack. Note that those values can still be overwritten on a per stack definition. |
 | `cloudformation_stacks` | list | `[]` | Array of cloudformation stacks to deploy. |
@@ -383,6 +385,12 @@ Resources:
 {% endfor %}
 {% endif %}
 ```
+
+## Diff
+
+When having enable `cloudformation_run_diff`, you will be able to see line by line diff output from you local (jinja2 rendered) template against the one which is currently deployed on AWS. To give you an impression about how this looks, see the following example output:
+
+TODO: Show diff here
 
 
 ## Dependencies

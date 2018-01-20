@@ -23,6 +23,46 @@
 
 
 ###
+### Diff rendered cloudformation template (check mode only)
+###
+- name: diff cloudformation template parameters
+  cloudformation_diff:
+    ignore_hidden_params: True
+    ignore_final_newline: False
+    output_format: json
+    output_choice: parameters
+    stack_name: "{{ cloudformation.stack_name }}"
+    template: "{{ cloudformation_build_dir_path }}/{{ cloudformation_file_name }}"
+    template_tags: "{{ cloudformation.tags | default(omit) }}"
+    template_parameters: "{{ cloudformation.template_parameters | default(omit) }}"
+    aws_access_key: "{{ cloudformation.aws_access_key | cloudformation_defauls.aws_access_key | default(omit) }}"
+    aws_secret_key: "{{ cloudformation.aws_secret_key | cloudformation_defauls.aws_secret_key | default(omit) }}"
+    security_token: "{{ cloudformation.security_token | cloudformation_defauls.security_token | default(omit) }}"
+    profile: "{{ cloudformation.profile | cloudformation_defaults.profile | default(omit) }}"
+    region: "{{ cloudformation.region | cloudformation_defaults.region | default(omit) }}"
+  when: not cloudformation_generate_only and cloudformation_run_diff and ansible_check_mode
+  check_mode: False
+
+- name: diff cloudformation template file
+  cloudformation_diff:
+    ignore_hidden_params: True
+    ignore_final_newline: False
+    output_format: json
+    output_choice: template
+    stack_name: "{{ cloudformation.stack_name }}"
+    template: "{{ cloudformation_build_dir_path }}/{{ cloudformation_file_name }}"
+    template_tags: "{{ cloudformation.tags | default(omit) }}"
+    template_parameters: "{{ cloudformation.template_parameters | default(omit) }}"
+    aws_access_key: "{{ cloudformation.aws_access_key | cloudformation_defauls.aws_access_key | default(omit) }}"
+    aws_secret_key: "{{ cloudformation.aws_secret_key | cloudformation_defauls.aws_secret_key | default(omit) }}"
+    security_token: "{{ cloudformation.security_token | cloudformation_defauls.security_token | default(omit) }}"
+    profile: "{{ cloudformation.profile | cloudformation_defaults.profile | default(omit) }}"
+    region: "{{ cloudformation.region | cloudformation_defaults.region | default(omit) }}"
+  when: not cloudformation_generate_only and cloudformation_run_diff and ansible_check_mode
+  check_mode: False
+
+
+###
 ### Run rendered cloudformation template
 ###
 - name: ensure cloudformation stack is present
