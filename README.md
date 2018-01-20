@@ -1,5 +1,6 @@
 # Ansible Role: Create cloudformation stacks
 
+**[Motivation](#motivation)** |
 **[Installation](#installation)** |
 **[Variables](#variables)** |
 **[Usage](#usage)** |
@@ -10,6 +11,18 @@
 [![Build Status](https://travis-ci.org/cytopia/ansible-cloudformation.svg?branch=master)](https://travis-ci.org/cytopia/ansible-cloudformation)
 
 Ansible role to render an arbitrary number of Jinja2 templates into cloudformation files and create any number of stacks.
+
+
+## Motivation
+
+This role overcomes the shortcomings of Cloudformation templates itself. The Cloudformation syntax is very limited when it comes to programming logic such as conditions, loops and complex variables such as arrays or dictionaries. By wrapping your Cloudformation template into Ansible, you will be able to use Jinja2 directives within the Cloudformation template itself, thus having all of the beauty of Ansible and still deploy via Cloudformation stacks.
+
+Another advantage of using Ansible to deploy your Cloudformation templates is that Ansible supports a `--check` mode for Cloudformation deployments (since Ansible 2.4). During that mode it will create Change-sets and let you know **what would change** if you actually roll it out.
+
+This role can be used to either only generate your templates via `cloudformation_generate_only` or also additionally deploy your rendered templates.
+
+When templates are rendered, a temporary `build/` directory is created inside the role directory. This can either persist or be re-created every time this role is run. Specify the behaviour with `cloudformation_clean_build_env`.
+
 
 ## Installation
 ```bash
