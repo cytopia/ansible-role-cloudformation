@@ -3,5 +3,15 @@
 - hosts: localhost
   connection: local
   remote_user: root
+  vars:
+    cloudformation_defaults:
+      region: eu-central-1
+    cloudformation_stacks:
+      - stack_name: stack-1
+        template: "{{ role_path }}/tests/cloudformation/stack-1.yml.j2"
+        template_parameters:
+          bucketName: my-bucket
+        tags:
+          env: tests
   roles:
     - ansible-cloudformation

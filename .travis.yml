@@ -31,7 +31,7 @@ script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   # Do something and see what happens
-  #- ansible-playbook tests/test.yml -i tests/inventory
+  - ansible-playbook tests/test.yml -i tests/inventory -e cloudformation_generate_only=True
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
