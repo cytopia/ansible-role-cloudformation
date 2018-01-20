@@ -3,20 +3,35 @@
 language: python
 python: "2.7"
 
-#before_install:
-#  - rvm install ruby-2.3.0
-#  - gem install bundle
-#  - bundle install
 
-# Use the new container infrastructure
+###
+### Use fast infrastructure
+###
 sudo: false
 
-# Install ansible
+
+###
+### What travis packages are required
+###
 addons:
   apt:
     packages:
       - python-pip
 
+
+###
+### Build stage variables
+###
+env:
+  matrix:
+    - check=ansible-galaxy
+    - check=syntax-check
+    - check=template-generation
+
+
+###
+### Install requirements
+###
 install:
   # Install ansible
   - pip install ansible
@@ -27,12 +42,23 @@ install:
   # Create ansible.cfg with correct roles_path
   - printf '[defaults]\nroles_path=../' > ansible.cfg
 
-script:
-  # Basic role syntax check
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
-  # Do something and see what happens
-  - ansible-playbook tests/test.yml -i tests/inventory -vv -e cloudformation_generate_only=True
-  - find build/ -type f -exec cat '{}' \;
 
+###
+### Script with Build stages
+###
+script:
+  - if [ "${check}" = "ansible-galaxy" ]; then
+        ansible-galaxy install cytopia.cloudformation;
+    elif [ "${check}" = "syntax-check" ]; then
+        ansible-playbook tests/test.yml -i tests/inventory --syntax-check;
+    elif [ "${check}" = "template-generation" ]; then
+        ansible-playbook tests/test.yml -i tests/inventory -vv -e cloudformation_generate_only=True;
+        find build/ -type f -exec cat '{}' \;;
+    fi
+
+
+###
+### Notify Ansible Galaxy to pull changes
+###
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
