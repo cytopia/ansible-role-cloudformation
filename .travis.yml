@@ -3,10 +3,10 @@
 language: python
 python: "2.7"
 
-before_install:
-  - rvm install ruby-2.3.0
-  - gem install bundle
-  - bundle install
+#before_install:
+#  - rvm install ruby-2.3.0
+#  - gem install bundle
+#  - bundle install
 
 # Use the new container infrastructure
 sudo: false
