@@ -42,6 +42,7 @@ $ ansible-galaxy install cytopia.cloudformation
 * Render templates only and use your current infrastructure to deploy
 * Dry-run via Ansible `--check` mode which will create temporary Change sets (e.g.: lets you know if a resource requires re-creation)
 * Have line-by-line diff between local and deployed templates via [cloudformation_diff](https://github.com/cytopia/ansible-modules) module
+* Make use of [Ansible vault](https://docs.ansible.com/ansible/2.4/vault.html) to store sensitive information encrypted
 
 
 ## Variables
