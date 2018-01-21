@@ -32,9 +32,17 @@ When templates are rendered, a temporary `build/` directory is created inside th
 
 
 ## Installation
+
+Either use [Ansible Galaxy](https://galaxy.ansible.com/cytopia/cloudformation/) to install the role:
 ```bash
 $ ansible-galaxy install cytopia.cloudformation
 ```
+
+Or git clone it into your roles directory
+```bash
+$ git clone https://github.com/cytopia/ansible-cloudformation /path/to/ansible/roles
+```
+
 
 ## Features
 * Deploy arbitrary number of [Cloudformation](https://aws.amazon.com/cloudformation/) templates
@@ -425,7 +433,7 @@ Use at least **Ansible 2.4** in order to also have `--check` mode for cloudforma
 
 The python module `cfn_flip` is required, when using line-by-line diff of local and remote Cloudformation templates (`cloudformation_run_diff=True`). This can easily be installed locally:
 ```bash
-pip install cfn_flip
+$ pip install cfn_flip
 ```
 
 
