@@ -2,6 +2,7 @@
 
 **[Motivation](#motivation)** |
 **[Installation](#installation)** |
+**[Features](#features)** |
 **[Variables](#variables)** |
 **[Usage](#usage)** |
 **[Templates](#templates)** |
@@ -14,7 +15,7 @@
 [![Ansible Galaxy](https://img.shields.io/ansible/role/d/23347.svg)](https://galaxy.ansible.com/cytopia/cloudformation/)
 [![Release](https://img.shields.io/github/release/cytopia/ansible-cloudformation.svg)](https://github.com/cytopia/ansible-cloudformation/releases)
 
-Ansible role to render an arbitrary number of Jinja2 templates into cloudformation files and create any number of stacks.
+Ansible role to render an arbitrary number of [Jinja2](http://jinja.pocoo.org/) templates into [Cloudformation](https://aws.amazon.com/cloudformation/) files and deploy any number of stacks.
 
 
 ## Motivation
@@ -35,6 +36,14 @@ When templates are rendered, a temporary `build/` directory is created inside th
 $ ansible-galaxy install cytopia.cloudformation
 ```
 
+## Features
+* Deploy arbitrary number of [Cloudformation](https://aws.amazon.com/cloudformation/) templates
+* Create Cloudformation templates with [Jinja2](http://jinja.pocoo.org/) templating engine
+* Render templates only and use your current infrastructure to deploy
+* Dry-run via Ansible `--check` mode which will create temporary Change sets (e.g.: lets you know if a resource requires re-creation)
+* Have line-by-line diff between local and deployed templates via [cloudformation_diff](https://github.com/cytopia/ansible-modules) module
+
+
 ## Variables
 
 ### Overview
@@ -43,8 +52,8 @@ The following variables are available in `defaults/main.yml` and can be used to 
 
 | Variable | Type | Default | Description |
 |----------|------|---------|-------------|
-| `cloudformation_clean_build_env` | bool | `False` | Clean build directory of Jinja2 rendered Cloudformation templates on each run. |
-| `cloudformation_generate_only` | bool | `False` | Specify this variable via ansible command line arguments to only render the Cloudformation files from Jinja2 templates and do not deploy them on AWS. |
+| `cloudformation_clean_build_env` | bool | `False` | Clean `build/` directory of Jinja2 rendered Cloudformation templates on each run. |
+| `cloudformation_generate_only` | bool | `False` | Insteaf of deploying your Cloudformation templates, you can also only render them and have them available in the `build/` directory so you can use your current infrastructure to deploy those templates.<br/>**Hint:** Specify this variable via ansible command line arguments |
 | `cloudformation_run_diff` | bool | `False` | This role ships a custom Ansible Cloudformation module **[cloudformation_diff](https://github.com/cytopia/ansible-modules)**. This module generates a text-based diff output between your local cloudformation template ready to be deployed and the currently deployed templated on AWS Cloudformation.<br/>Why would I want this?<br/>The current cloudformation module only list change sets in --check mode, which will let you know what *kind* will change (e.g. security groups), but not what exactly will change (which security groups and the values of them) In order to also be able to view the exact changes that will take place, enable the cloudformation_diff module here. |
 | `cloudformation_required` | list | `[]` | Array of available cloudformation stack keys that you want to enforce to be required instead of being optional. Each cloudformation stack item will be checked against the customly set required keys. In case a stack item does not contain any of those keys, an error will be thrown before any deployment has happened. |
 | `cloudformation_defaults` | dict | `{}` | Dictionary of default values to apply to every cloudformation stack. Note that those values can still be overwritten on a per stack definition. |
@@ -406,14 +415,17 @@ When having enable `cloudformation_run_diff`, you will be able to see line by li
 
 ## Dependencies
 
-None
+This role does not depend on any other roles.
 
 
 ## Requirements
 
 Use at least **Ansible 2.4** in order to also have `--check` mode for cloudformation.
 
-When using diff mode, python `cfn_flip` is required. (`pip install cfn_flip`)
+The python module `cfn_flip` is required, when using line-by-line diff of local and remote Cloudformation templates (`cloudformation_run_diff=True`). This can easily be installed locally:
+```bash
+pip install cfn_flip
+```
 
 
 ## License
