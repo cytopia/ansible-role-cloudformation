@@ -156,18 +156,21 @@ Basisc usage example:
 
 `group_vars/all.yml`
 ```yml
-cloudformation_defaults:
-  profile: testing
-  region: eu-central-1
-
+# Define Cloudformation stacks
 cloudformation_stacks:
+  # First stack
   - stack_name: stack-s3
+    profile: testing
+    region: eu-central-1
     template: files/cloudformation/s3.yml.j2
     template_parameters:
       bucketName: my-bucket
     tags:
-      env: "{{ cloudformation_defaults.profile }}"
+      env: testing
+  # Second stack
   - stack_name: stack-lambda
+    profile: testing
+    region: eu-central-1
     template: files/cloudformation/lambda.yml.j2
     template_parameters:
       lambdaFunctionName: lambda
@@ -176,7 +179,7 @@ cloudformation_stacks:
       s3Bucket: my-bucket
       s3Key: lambda.py.zip
     tags:
-      env: "{{ cloudformation_defaults.profile }}"
+      env: testing
 ```
 
 ### Advanced
@@ -414,10 +417,10 @@ Make sure to run Ansible with `--diff` to make it work:
 $ ansible-playbook play.yml --diff
 ```
 
-#### Json diff
+### Json diff
 To have it output in json diff mode, set `cloudformation_diff_output` to `json`.
 ```diff
-TASK [cloudformation : diff cloudformation template file] **************************************************************
+TASK [cloudformation : diff cloudformation template file] *********************************************
 --- before
 +++ after
 @@ -38,7 +38,6 @@
@@ -430,10 +433,10 @@ TASK [cloudformation : diff cloudformation template file] **********************
                      "Ref": "bucketName"
 ```
 
-#### Yaml diff
+### Yaml diff
 To have it output in yaml diff mode, set `cloudformation_diff_output` to `yaml`.
 ```diff
-TASK [cloudformation : diff cloudformation template file] **************************************************************
+TASK [cloudformation : diff cloudformation template file] *********************************************
 --- before
 +++ after
 @@ -14,7 +14,6 @@
