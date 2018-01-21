@@ -29,7 +29,7 @@
   cloudformation_diff:
     ignore_hidden_params: True
     ignore_final_newline: False
-    output_format: json
+    output_format: "{{ cloudformation_diff_output }}"
     output_choice: parameter
     stack_name: "{{ cloudformation.stack_name }}"
     template: "{{ cloudformation_build_dir_path }}/{{ cloudformation_file_name }}"
@@ -40,14 +40,14 @@
     security_token: "{{ cloudformation.security_token | default(cloudformation_defaults.security_token | default(omit)) }}"
     profile: "{{ cloudformation.profile | default(cloudformation_defaults.profile | default(omit)) }}"
     region: "{{ cloudformation.region | default(cloudformation_defaults.region | default(omit)) }}"
-  when: not cloudformation_generate_only and cloudformation_run_diff and ansible_check_mode
+  when: not cloudformation_generate_only and cloudformation_run_diff
   check_mode: False
 
 - name: diff cloudformation template file
   cloudformation_diff:
     ignore_hidden_params: True
     ignore_final_newline: False
-    output_format: json
+    output_format: "{{ cloudformation_diff_output }}"
     output_choice: template
     stack_name: "{{ cloudformation.stack_name }}"
     template: "{{ cloudformation_build_dir_path }}/{{ cloudformation_file_name }}"
@@ -58,7 +58,7 @@
     security_token: "{{ cloudformation.security_token | default(cloudformation_defaults.security_token | default(omit)) }}"
     profile: "{{ cloudformation.profile | default(cloudformation_defaults.profile | default(omit)) }}"
     region: "{{ cloudformation.region | default(cloudformation_defaults.region | default(omit)) }}"
-  when: not cloudformation_generate_only and cloudformation_run_diff and ansible_check_mode
+  when: not cloudformation_generate_only and cloudformation_run_diff
   check_mode: False
 
 
