@@ -16,3 +16,9 @@
   with_nested:
     - "{{ cloudformation_stacks }}"
     - "{{ cloudformation_required }}"
+
+- name: assert that cloudformation_diff output is set correctly
+  assert:
+    that:
+      - "cloudformation_diff_output == 'yaml' or cloudformation_diff_output == 'json'"
+    msg: "cloudformation_diff_output must either be 'yaml' or 'json', but not: '{{ cloudformation_diff_output }}'"

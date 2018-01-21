@@ -26,6 +26,12 @@ cloudformation_generate_only: False
 cloudformation_run_diff: False
 
 
+# When using cloudformation_diff specify the output format of your cloudformation templates
+# When you are using json-based cloudformation templates, set it to 'json' and when
+# you use yaml-based cloudformation templates, set it to 'yaml'.
+cloudformation_diff_output: json
+
+
 # Dictionary of cloudformation defaults which will be applied
 # to all stacks. Values supplied explicitly to a stack take
 # precendence. All of the default values are optional and

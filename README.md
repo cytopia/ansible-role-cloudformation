@@ -64,6 +64,7 @@ The following variables are available in `defaults/main.yml` and can be used to 
 | `cloudformation_clean_build_env` | bool | `False` | Clean `build/` directory of Jinja2 rendered Cloudformation templates on each run. |
 | `cloudformation_generate_only` | bool | `False` | Insteaf of deploying your Cloudformation templates, you can also only render them and have them available in the `build/` directory so you can use your current infrastructure to deploy those templates.<br/>**Hint:** Specify this variable via ansible command line arguments |
 | `cloudformation_run_diff` | bool | `False` | This role ships a custom Ansible Cloudformation module **[cloudformation_diff](https://github.com/cytopia/ansible-modules)**. This module generates a text-based diff output between your local cloudformation template ready to be deployed and the currently deployed templated on AWS Cloudformation.<br/>Why would I want this?<br/>The current cloudformation module only list change sets in --check mode, which will let you know what *kind* will change (e.g. security groups), but not what exactly will change (which security groups and the values of them) In order to also be able to view the exact changes that will take place, enable the cloudformation_diff module here. |
+| `cloudformation_diff_output` | string | `json` | When `cloudformation_run_diff` is enabled, what output diff should be specified? If you write your cloudformation templates via json, use `json` here or if you write your cloudformation templates in yaml, use `yaml` here. |
 | `cloudformation_required` | list | `[]` | Array of available cloudformation stack keys that you want to enforce to be required instead of being optional. Each cloudformation stack item will be checked against the customly set required keys. In case a stack item does not contain any of those keys, an error will be thrown before any deployment has happened. |
 | `cloudformation_defaults` | dict | `{}` | Dictionary of default values to apply to every cloudformation stack. Note that those values can still be overwritten on a per stack definition. |
 | `cloudformation_stacks` | list | `[]` | Array of cloudformation stacks to deploy. |
@@ -408,7 +409,15 @@ Resources:
 
 When having enable `cloudformation_run_diff`, you will be able to see line by line diff output from you local (jinja2 rendered) template against the one which is currently deployed on AWS. To give you an impression about how this looks, see the following example output:
 
+Make sure to run Ansible with `--diff` to make it work:
+```bash
+$ ansible-playbook play.yml --diff
+```
+
+#### Json diff
+To have it output in json diff mode, set `cloudformation_diff_output` to `json`.
 ```diff
+TASK [cloudformation : diff cloudformation template file] **************************************************************
 --- before
 +++ after
 @@ -38,7 +38,6 @@
@@ -419,6 +428,22 @@ When having enable `cloudformation_run_diff`, you will be able to see line by li
              "Properties": {
                  "BucketName": {
                      "Ref": "bucketName"
+```
+
+#### Yaml diff
+To have it output in yaml diff mode, set `cloudformation_diff_output` to `yaml`.
+```diff
+TASK [cloudformation : diff cloudformation template file] **************************************************************
+--- before
++++ after
+@@ -14,7 +14,6 @@
+               Service: !Sub 'logs.${AWS::Region}.amazonaws.com'
+       Bucket: !Ref 's3Bucket'
+   s3Bucket:
+-    DeletionPolicy: Retain
+     Type: AWS::S3::Bucket
+     Properties:
+       BucketName: !Ref 'bucketName'
 ```
 
 
