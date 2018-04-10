@@ -11,9 +11,9 @@
 **[Requirements](#requirements)** |
 **[License](#license)**
 
-[![Build Status](https://travis-ci.org/cytopia/ansible-cloudformation.svg?branch=master)](https://travis-ci.org/cytopia/ansible-cloudformation)
+[![Build Status](https://travis-ci.org/cytopia/ansible-role-cloudformation.svg?branch=master)](https://travis-ci.org/cytopia/ansible-role-cloudformation)
 [![Ansible Galaxy](https://img.shields.io/ansible/role/d/23347.svg)](https://galaxy.ansible.com/cytopia/cloudformation/)
-[![Release](https://img.shields.io/github/release/cytopia/ansible-cloudformation.svg)](https://github.com/cytopia/ansible-cloudformation/releases)
+[![Release](https://img.shields.io/github/release/cytopia/ansible-role-cloudformation.svg)](https://github.com/cytopia/ansible-role-cloudformation/releases)
 
 Ansible role to render an arbitrary number of [Jinja2](http://jinja.pocoo.org/) templates into [Cloudformation](https://aws.amazon.com/cloudformation/) files and deploy any number of stacks.
 
@@ -40,7 +40,7 @@ $ ansible-galaxy install cytopia.cloudformation
 
 Or git clone it into your roles directory
 ```bash
-$ git clone https://github.com/cytopia/ansible-cloudformation /path/to/ansible/roles
+$ git clone https://github.com/cytopia/ansible-role-cloudformation /path/to/ansible/roles
 ```
 
 

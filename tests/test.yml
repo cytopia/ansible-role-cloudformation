@@ -17,4 +17,4 @@
         tags:
           env: tests
   roles:
-    - ansible-cloudformation
+    - ansible-role-cloudformation
