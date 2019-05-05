@@ -9,7 +9,7 @@ galaxy_info:
   platforms:
     - name: Amazon
       versions:
-       - all
+        - all
     - name: EL
       versions:
         - 5
@@ -26,7 +26,6 @@ galaxy_info:
         - raring
         - saucy
   galaxy_tags:
-    - AWS
     - aws
     - amazon
     - cloudformation
