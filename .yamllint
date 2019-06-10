@@ -1,0 +1,13 @@
+---
+
+extends: default
+
+ignore: |
+  /.travis.yml
+  /build/
+
+rules:
+  line-length:
+    max: 160
+  colons:
+    max-spaces-after: 10

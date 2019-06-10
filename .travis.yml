@@ -1,60 +1,60 @@
 ---
 
+###
+### Enable sudo (required for docker service)
+###
+sudo: required
+
+
+###
+### Language
+###
 language: python
-python: "2.7"
 
 
 ###
-### Use fast infrastructure
+### Add services
 ###
-sudo: false
+services:
+  - docker
 
 
 ###
-### What travis packages are required
-###
-addons:
-  apt:
-    packages:
-      - python-pip
-
-
-###
-### Build stage variables
+### Build Matrix
 ###
 env:
   matrix:
-    - check=ansible-galaxy
-    - check=syntax-check
-    - check=template-generation
+    - ansible=2.4
+    - ansible=2.5
+    - ansible=2.6
+    - ansible=2.7
+    - ansible=2.8
+    - ansible=latest
 
 
 ###
 ### Install requirements
 ###
 install:
-  # Install ansible
-  - pip install ansible
-
-  # Check ansible version
-  - ansible --version
-
-  # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' > ansible.cfg
+  # Get newer docker version
+  - while ! sudo apt-get update; do sleep 1; done
+  - while ! sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce; do sleep 1; done
+  - docker version
 
 
 ###
-### Script with Build stages
+### Linting and pre-flight check
+###
+before_script:
+  - while ! make lint ANSIBLE_VERSION=${ansible}; do sleep 1; done
+  - while ! make galaxy; do sleep 1; done
+
+
+###
+### Tests
 ###
 script:
-  - if [ "${check}" = "ansible-galaxy" ]; then
-        ansible-galaxy install cytopia.cloudformation;
-    elif [ "${check}" = "syntax-check" ]; then
-        ansible-playbook tests/test.yml -i tests/inventory --syntax-check;
-    elif [ "${check}" = "template-generation" ]; then
-        ansible-playbook tests/test.yml -i tests/inventory -vv -e cloudformation_generate_only=True;
-        find build/ -type f -exec cat '{}' \;;
-    fi
+  - while ! make test ANSIBLE_VERSION=${ansible};do sleep 1; done
 
 
 ###
