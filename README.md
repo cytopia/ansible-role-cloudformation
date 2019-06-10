@@ -82,6 +82,7 @@ This section contains a more detailed describtion about available dict or array 
 | `security_token` | string | optional | AWS security token to use |
 | `profile` | string | optional | AWS boto profile to use |
 | `notification_arns` | string | optional | Publish stack notifications to these ARN's |
+| `termination_protection` | bool | optional | Enable or disable termination protection on the stack. Only works with botocore >= 1.7.18 |
 | `region` | string | optional | AWS region to deploy stack to |
 
 #### `cloudformation_stacks`
@@ -95,6 +96,7 @@ This section contains a more detailed describtion about available dict or array 
 | `security_token` | string | optional | AWS security token to use (overwrites default) |
 | `profile` | string | optional | AWS boto profile to use (overwrites default) |
 | `notification_arns` | string | optional | Publish stack notifications to these ARN's (overwrites default) |
+| `termination_protection` | bool | optional | Enable or disable termination protection on the stack. Only works with botocore >= 1.7.18 |
 | `region` | string | optional | AWS region to deploy stack to (overwrites default) |
 | `template_parameters` | dict | optional | Required cloudformation stack parameters |
 | `tags` | dict | optional | Tags associated with the cloudformation stack |
@@ -125,6 +127,7 @@ cloudformation_stacks:
   - stack_name: stack-lambda
     template: files/cloudformation/lambda.yml.j2
     profile: production
+    termination_protection: True
     template_parameters:
       lambdaFunctionName: lambda
       handler: lambda.run_handler
@@ -170,6 +173,7 @@ cloudformation_stacks:
   # Second stack
   - stack_name: stack-lambda
     profile: testing
+    termination_protection: True
     region: eu-central-1
     template: files/cloudformation/lambda.yml.j2
     template_parameters:
@@ -457,7 +461,7 @@ This role does not depend on any other roles.
 
 ## Requirements
 
-Use at least **Ansible 2.4** in order to also have `--check` mode for cloudformation.
+Use at least **Ansible 2.5** in order to also have `--check` mode for cloudformation.
 
 The python module `cfn_flip` is required, when using line-by-line diff of local and remote Cloudformation templates (`cloudformation_run_diff=True`). This can easily be installed locally:
 ```bash

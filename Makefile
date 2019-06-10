@@ -5,7 +5,7 @@ endif
 .PHONY: help lint galaxy test _lint_yaml _lint_syntax _lint_ansible
 
 CURRENT_DIR     = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-ANSIBLE_VERSION = 2.4
+ANSIBLE_VERSION = 2.5
 
 help:
 	@echo "lint       Static source code analysis"
