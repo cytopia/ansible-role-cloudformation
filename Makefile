@@ -25,11 +25,10 @@ galaxy:
 	@echo "================================================================================"
 	@echo "= ANSIBLE-GALAXY"
 	@echo "================================================================================"
-	$(eval ROLE_VERSION := $(shell git describe --abbrev=0 --tags))
 	docker run --rm \
 		-v $(CURRENT_DIR):/data \
 		cytopia/ansible:$(ANSIBLE_VERSION) \
-		ansible-galaxy install cytopia.cloudformation,$(ROLE_VERSION)
+		ansible-galaxy install cytopia.cloudformation
 
 test: ansible.cfg
 	@echo "================================================================================"
