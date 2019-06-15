@@ -2,7 +2,7 @@ ifneq (,)
 .error This Makefile requires GNU Make.
 endif
 
-.PHONY: help lint galaxy test _lint_yaml _lint_syntax _lint_ansible
+.PHONY: help lint galaxy test _lint-ansible-syntax _lint-ansible-lint _lint-yamllint _lint-pycodestyle
 
 CURRENT_DIR     = $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 ANSIBLE_VERSION = 2.5
@@ -16,9 +16,10 @@ lint:
 	@echo "================================================================================"
 	@echo "= LINTING"
 	@echo "================================================================================"
-	@$(MAKE) --no-print-directory _lint_yaml
-	@$(MAKE) --no-print-directory _lint_syntax
-	@$(MAKE) --no-print-directory _lint_ansible
+	@$(MAKE) --no-print-directory _lint-ansible-syntax
+	@$(MAKE) --no-print-directory _lint-ansible-lint
+	@$(MAKE) --no-print-directory _lint-yamllint
+	@$(MAKE) --no-print-directory _lint-pycodestyle
 
 galaxy:
 	@echo "================================================================================"
@@ -48,7 +49,7 @@ test: ansible.cfg
 ansible.cfg:
 	printf '[defaults]\nroles_path=../' > ansible.cfg
 
-_lint_yaml:
+_lint-yamllint:
 	@echo "------------------------------------------------------------"
 	@echo "- yamllint"
 	@echo "------------------------------------------------------------"
@@ -56,7 +57,7 @@ _lint_yaml:
 		-v $(CURRENT_DIR):/data/ \
 		cytopia/yamllint .
 
-_lint_syntax: ansible.cfg
+_lint-ansible-syntax: ansible.cfg
 	@echo "------------------------------------------------------------"
 	@echo "- ansible-playbook --syntax-check"
 	@echo "------------------------------------------------------------"
@@ -66,12 +67,19 @@ _lint_syntax: ansible.cfg
 		cytopia/ansible:$(ANSIBLE_VERSION) \
 		ansible-playbook tests/test.yml -i tests/inventory -vv --syntax-check
 
-_lint_ansible: ansible.cfg
+_lint-ansible-lint: ansible.cfg
 	@echo "------------------------------------------------------------"
 	@echo "- ansible-lint"
 	@echo "------------------------------------------------------------"
 	docker run --rm \
 		-w /data/ansible-role-cloudformation \
 		-v $(CURRENT_DIR):/data/ansible-role-cloudformation \
-		cytopia/ansible-lint \
-		ansible-lint -vv tests/test.yml
+		cytopia/ansible-lint -v tests/test.yml
+
+_lint-pycodestyle:
+	@echo "------------------------------------------------------------"
+	@echo "- pycodestyle"
+	@echo "------------------------------------------------------------"
+	docker run --rm \
+		-v $(CURRENT_DIR):/data/ \
+		cytopia/pycodestyle -v .
