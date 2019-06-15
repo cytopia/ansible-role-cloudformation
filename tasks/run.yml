@@ -77,6 +77,7 @@
     profile: "{{ cloudformation.profile | default(cloudformation_defaults.profile | default(omit)) }}"
     region: "{{ cloudformation.region | default(cloudformation_defaults.region | default(omit)) }}"
     notification_arns: "{{ cloudformation.notification_arns | default(cloudformation_defaults.notification_arns | default(omit)) }}"
+    termination_protection: "{{ cloudformation.termination_protextion | default(cloudformation_defaults.termination_protection | default(omit)) }}"
     template_parameters: "{{ cloudformation.template_parameters | default(omit) }}"
     tags: "{{ cloudformation.tags | default(omit) }}"
   when: not cloudformation_generate_only

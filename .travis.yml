@@ -24,7 +24,6 @@ services:
 ###
 env:
   matrix:
-    - ansible=2.4
     - ansible=2.5
     - ansible=2.6
     - ansible=2.7

@@ -5,7 +5,7 @@ galaxy_info:
   company: cytopia
   license: MIT
   description: Ansible role to render an arbitrary number of Jinja2 templates into cloudformation files and create any number of stacks.
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
     - name: Amazon
       versions:

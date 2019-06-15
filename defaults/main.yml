@@ -44,6 +44,7 @@ cloudformation_defaults: {}
 #  security_token:
 #  profile:
 #  notification_arns:
+#  termination_protection
 #  region:
 
 
@@ -79,6 +80,7 @@ cloudformation_stacks: []
 #    security_token:
 #    profile:
 #    notification_arns:
+#    termination_protection
 #    region:
 #    template_parameters:
 #      param1: val1
